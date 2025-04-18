@@ -4,7 +4,6 @@ import AnalyzeAndExpandPage from './pages/AnalyzeAndExpandPage';
 import LessonPage from './pages/LessonPage';
 import Slide from './components/Slide';
 import './App.css';
-import AnimatedBackground from './components/AnimatedBackground';
 import SignUpPage from './pages/SignUpPage';
 import LoginPage from './pages/LoginPage';
 import { useNavigate } from 'react-router-dom';
@@ -21,8 +20,6 @@ function HomePage() {
   const [typedSubject, setTypedSubject] = useState('');
   const [selectedGrade, setSelectedGrade] = useState('middle');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState('en');
-  const [hasSummary, setHasSummary] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const storedName = localStorage.getItem('userName');
   const welcomeText = storedName ? `welcome ${storedName.toLowerCase()}` : 'welcome';
