@@ -25,7 +25,7 @@ function HomePage() {
   const welcomeText = storedName ? `welcome ${storedName.toLowerCase()}` : 'welcome';
   const navigate = useNavigate();
   const [showUploadSuccess, setShowUploadSuccess] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState('en');
+  const [selectedLanguage] = useState('en');
 
 
   React.useEffect(() => {
