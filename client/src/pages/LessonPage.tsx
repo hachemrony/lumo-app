@@ -5,6 +5,8 @@ import Slide from '../components/Slide';
 export default function LessonPage() {
   const location = useLocation();
   const incomingSlides = location.state?.slides || [];
+  const [selectedLanguage, setSelectedLanguage] = useState('en');
+
 
   const slides = incomingSlides.map((raw: string, index: number) => {
     let title = `Slide ${index + 1}`;
