@@ -38,7 +38,6 @@ function HomePage() {
         if (parsed.typedSubject) setTypedSubject(parsed.typedSubject);
         if (parsed.selectedGrade) setSelectedGrade(parsed.selectedGrade);
         if (parsed.currentSlideIndex !== undefined) setCurrentSlideIndex(parsed.currentSlideIndex);
-        setHasSummary(true);
       } catch (err) {
         console.error("❌ Failed to load draft:", err);
       }
