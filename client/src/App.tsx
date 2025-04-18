@@ -76,7 +76,6 @@ function HomePage() {
       }      
       setSlides(data.summary);
       setCurrentSlideIndex(0);
-      setHasSummary(true);
     } catch (error) {
       alert('Failed to summarize text');
     } finally {
@@ -108,7 +107,6 @@ function HomePage() {
       }      
       setSlides(data.summary);
       setCurrentSlideIndex(0);
-      setHasSummary(true);
     } catch (error) {
       alert('Failed to generate slides');
     } finally {
@@ -148,7 +146,6 @@ function HomePage() {
         if (content.slides && Array.isArray(content.slides)) {
           setSlides(content.slides);
           setCurrentSlideIndex(0);
-          setHasSummary(true);
           alert("✅ Lesson loaded successfully!");
         } else {
           alert("❌ Invalid file format.");
