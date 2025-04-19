@@ -308,19 +308,19 @@ export default function Slide({
           onClick={handleSave}
           className="block px-4 py-2 hover:bg-gray-100 w-full text-left"
         >
-          💾 Save
+          Save
         </button>
         <button
           onClick={handleDownload}
           className="block px-4 py-2 hover:bg-gray-100 w-full text-left"
         >
-          📄 Download PDF
+          Download PDF
         </button>
         <button
           onClick={handleExit}
           className="block px-4 py-2 hover:bg-gray-100 w-full text-left"
         >
-          🚪 Exit
+          Exit
         </button>
       </div>
     )}

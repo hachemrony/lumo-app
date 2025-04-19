@@ -31,8 +31,10 @@ function HomePage() {
 
 
   React.useEffect(() => {
+    const shouldLoad = localStorage.getItem('loadDraftOnStart');
     const saved = localStorage.getItem('lessonDraft');
-    if (saved) {
+  
+    if (shouldLoad === 'true' && saved) {
       try {
         const parsed = JSON.parse(saved);
         if (parsed.slides) setSlides(parsed.slides);
@@ -45,6 +47,7 @@ function HomePage() {
       }
     }
   }, []);
+  
 
   const handleClearDraft = () => {
     localStorage.removeItem('draftSubject');
@@ -153,6 +156,10 @@ function HomePage() {
           setSlides(content.slides);
           setCurrentSlideIndex(content.currentSlideIndex || 0);
           setSelectedGrade(content.selectedGrade || "middle");
+  
+          // ✅ Prevent auto-loading again on refresh
+          localStorage.setItem('loadDraftOnStart', 'false');
+  
           alert("✅ Lesson loaded successfully!");
         } else {
           alert("❌ Invalid file format. Please select a valid lesson file.");
@@ -170,6 +177,7 @@ function HomePage() {
   
     reader.readAsText(file);
   };
+  
   
   
   // Auto-save data to localStorage when any relevant state changes
@@ -196,103 +204,126 @@ function HomePage() {
 
 
   return (
-  <>
-   {!Array.isArray(slides) || slides.length === 0 ? (
+    <>
+      {/* ☰ Menu button and dropdown */}
+      {!Array.isArray(slides) || slides.length === 0 ? (
+        <div style={{ position: 'absolute', top: 20, right: 20, zIndex: 10 }}>
+          <button
+            onClick={() => setIsMenuOpen((prev) => !prev)}
+            style={{
+              background: '#fff',
+              border: '1px solid #ccc',
+              borderRadius: '6px',
+              padding: '8px 12px',
+              cursor: 'pointer',
+              fontWeight: 400,
+            }}
+          >
+            ☰
+          </button>
+  
+          {isMenuOpen && (
+            <div style={{
+              position: 'absolute',
+              right: 0,
+              marginTop: '8px',
+              background: '#fff',
+              border: '1px solid #ccc',
+              borderRadius: '6px',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+              width: '160px'
+            }}>
+              <button
+               style={{
+                display: 'block',
+                width: '100%',
+                padding: '10px 16px',
+                textAlign: 'left',
+                borderBottom: '1px solid #eee',
+                background: 'none',
+                cursor: 'pointer',
+                fontWeight: 200,
+               }}
+               onClick={() => navigate('/signup')}
+              >
+               Sign Up
+              </button>
 
-    <div style={{ position: 'absolute', top: 20, right: 20, zIndex: 10 }}>
-  <button
-    onClick={() => setIsMenuOpen((prev) => !prev)}
-    style={{
-      background: '#fff',
-      border: '1px solid #ccc',
-      borderRadius: '6px',
-      padding: '8px 12px',
-      cursor: 'pointer',
-      fontWeight: 500,
-    }}
-  >
-    ☰ Menu
-  </button>
+            <button
+             style={{
+              display: 'block',
+              width: '100%',
+              padding: '10px 16px',
+              textAlign: 'left',
+              borderBottom: '1px solid #eee',
+              background: 'none',
+              cursor: 'pointer',
+              fontWeight: 200,
+             }}
+  
+             onClick={() => navigate('/login')}
+            >
+             Log In
+            </button>
 
-  {isMenuOpen && (
-    <div style={{
-      position: 'absolute',
-      right: 0,
-      marginTop: '8px',
-      background: '#fff',
-      border: '1px solid #ccc',
-      borderRadius: '6px',
-      boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-      width: '160px'
-    }}>
-      <button
-        style={{ display: 'block', width: '100%', padding: '10px', borderBottom: '1px solid #eee', background: 'none', cursor: 'pointer' }}
-        onClick={() => window.location.href = "/signup"}
-      >
-        📝 Sign Up
-      </button>
-      
-      <button
-        style={{ display: 'block', width: '100%', padding: '10px', borderBottom: '1px solid #eee', background: 'none', cursor: 'pointer' }}
-        onClick={() => {
-          const user = localStorage.getItem('userName');
-          if (user) {
-            alert("🟢 You are already logged in.");
-          } else {
-            navigate('/login');
-          }
-        }}        
-      >
-        🔐 Log In
-      </button>
+            <button
+             onClick={() => {
+               localStorage.removeItem('userName');
+               localStorage.removeItem('userPassword');
+               localStorage.removeItem('userEmail');
+               // ✅ Keep registered accounts like 'allUsers' untouched
+               window.location.reload();
+             }}
+             style={{
+               display: 'block',
+               width: '100%',
+               padding: '10px 16px',
+               textAlign: 'left',
+               borderBottom: '1px solid #eee',
+               background: 'none',
+               cursor: 'pointer',
+               fontWeight: 200,
+             }}
+            >
+              Sign Out
+            </button>
 
-      <button
-        style={{ display: 'block', width: '100%', padding: '10px', borderBottom: '1px solid #eee', background: 'none', cursor: 'pointer' }}
-        onClick={() => {
-         localStorage.removeItem('userName');
-         localStorage.removeItem('userPassword');
-         localStorage.removeItem('userEmail');
-         window.location.reload(); // 👈 Refresh to remove name from UI
-        }}
-      >
-       🚪 Sign Out
-      </button>
+            <button
+             onClick={() => fileInputRef.current?.click()}
+             style={{
+              display: 'block',
+              width: '100%',
+              padding: '10px 16px',
+              textAlign: 'left',
+              borderBottom: '1px solid #eee',
+              background: 'none',
+              cursor: 'pointer',
+              fontWeight: 200,
+             }}
+            >
+              Open Saved File
+            </button>
 
-      
-      <button
-        style={{ display: 'block', width: '100%', padding: '10px', background: 'none', cursor: 'pointer' }}
-        onClick={() => fileInputRef.current?.click()}
-      >
-        📂 Open Saved File
-      </button>
-
-      <input
-        type="file"
-        accept=".json"
-        id="openSavedFile"
-        ref={fileInputRef}
-        style={{ display: 'none' }}
-        onChange={handleOpenSavedFile}
-      />
-
-    </div>
-  )}
- </div>
-) : null}
-
-
-      {/* ✅ Animated background behind all content */}
+              <input
+                type="file"
+                accept=".json"
+                ref={fileInputRef}
+                style={{ display: 'none' }}
+                onChange={handleOpenSavedFile}
+              />
+            </div>
+          )}
+        </div>
+      ) : null}
+  
+      {/* Background */}
       <div className="animated-bg"></div>
   
-      <div
-        className="App"
-        style={{
-          padding: '20px',
-          position: 'relative',
-          zIndex: 1, // Keeps content above background
-        }}
-      >
+      <div className="App" style={{ padding: '20px', position: 'relative', zIndex: 1 }}>
         {Array.isArray(slides) && slides.length > 0 && slides[currentSlideIndex] ? (
+          <>
+        
+          {/* Slide View */}
           <Slide
             title={slides[currentSlideIndex].title}
             content={slides[currentSlideIndex].content}
@@ -304,42 +335,35 @@ function HomePage() {
             currentSlideIndex={currentSlideIndex}
             selectedLanguage={selectedLanguage}
           />
+        </>
+        
         ) : (
           <>
-            {/* 🟦 Welcome Title and Subtitle */}
+            {/* Welcome Header */}
             <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-             <h1
-              style={{
-               fontSize: '4rem',
-               fontWeight: 'bold',
-               fontStyle: 'italic',
-               color: '#2a4d8f',
-               letterSpacing: '2px',
-               whiteSpace: 'pre', // 👈 Add this line
-              }}
-             >
-              {welcomeText.split('').map((char, i) => (
-               <span
-                key={i}
-                style={{
-                 opacity: 0,
-                 animation: `fadeIn 0.5s ease forwards`,
-                 animationDelay: `${i * 0.2}s`,
-                 display: 'inline-block',
-                }}
-               >
-                {char}
-               </span>
-              ))}
-             </h1>
-
-
+              <h1 style={{
+                fontSize: '4rem',
+                fontWeight: 'bold',
+                fontStyle: 'italic',
+                color: '#2a4d8f',
+                letterSpacing: '2px',
+                whiteSpace: 'pre',
+              }}>
+                {welcomeText.split('').map((char, i) => (
+                  <span key={i} style={{
+                    opacity: 0,
+                    animation: `fadeIn 0.5s ease forwards`,
+                    animationDelay: `${i * 0.2}s`,
+                    display: 'inline-block',
+                  }}>{char}</span>
+                ))}
+              </h1>
               <p style={{ fontSize: '1.1rem', color: '#333' }}>
                 Please upload a document or type a subject before clicking Generate.
               </p>
             </div>
   
-            {/* 🧭 Controls */}
+            {/* Controls */}
             <div style={{
               display: 'flex',
               flexWrap: 'wrap',
@@ -359,32 +383,29 @@ function HomePage() {
               </label>
   
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-               <input
-                type="text"
-                placeholder="type a subject"
-                value={typedSubject}
-                onChange={(e) => setTypedSubject(e.target.value)}
-                className="subject-input"
-                style={{ marginBottom: '4px' }}
-               />
-
-               {typedSubject && (
-                <span
-                 onClick={handleClearDraft}
-                 style={{
-                  fontSize: '0.75rem',
-                  color: '#555',
-                  textDecoration: 'underline',
-                  cursor: 'pointer',
-                  textAlign: 'center',
-                 }}
-                >
-                 🗑️ Clear Draft
-                </span>
-               )}
+                <input
+                  type="text"
+                  placeholder="type a subject"
+                  value={typedSubject}
+                  onChange={(e) => setTypedSubject(e.target.value)}
+                  className="subject-input"
+                  style={{ marginBottom: '4px' }}
+                />
+                {typedSubject && (
+                  <span
+                    onClick={handleClearDraft}
+                    style={{
+                      fontSize: '0.75rem',
+                      color: '#555',
+                      textDecoration: 'underline',
+                      cursor: 'pointer',
+                      textAlign: 'center',
+                    }}
+                  >
+                    🗑️ Clear Draft
+                  </span>
+                )}
               </div>
-
-
   
               <select
                 value={selectedGrade}
@@ -397,109 +418,101 @@ function HomePage() {
               </select>
             </div>
   
-            {/* ✅ Upload success message */}
             {showUploadSuccess && (
-             <p style={{ textAlign: 'center', color: 'green', fontWeight: 500 }}>
-              ✅ Document uploaded successfully!
-             </p>
+              <p style={{ textAlign: 'center', color: 'green', fontWeight: 300 }}>
+                ✅ Document uploaded successfully!
+              </p>
             )}
   
-            {/* 🚀 Generate Button */}
             <div style={{ textAlign: 'center', marginTop: '50px' }}>
               <button
                 onClick={typedSubject ? handleSubjectSubmit : handleSummarize}
                 className="custom-button"
-                style={{ backgroundColor: '#eee', minWidth: '200px', height: '36px', padding: '8px 24px', border: '1px solid #555' }}
+                style={{
+                  backgroundColor: '#eee',
+                  minWidth: '200px',
+                  height: '36px',
+                  padding: '8px 24px',
+                  border: '1px solid #555'
+                }}
               >
                 ✨ Generate
               </button>
             </div>
-
-            <div className="tagline-wrapper">
-             <div className="tagline-track">
-              <span className="tagline-text">
-               empowering education with ai · instantly summarized · visual learning made easy · 
-              </span>
-              <span className="tagline-text">
-               empowering education with ai · instantly summarized · visual learning made easy · 
-              </span>
-             </div>
-            </div>
-
-            <div style={{
-              marginTop: '50px',
-              textAlign: 'center',
-              fontSize: '1.1rem',
-              fontWeight: 500,
-              color: '#2a4d8f',
-              minHeight: '28px', // keeps it from jumping layout
-            }}>
-              <span id="tagline-text" />
-            </div>
-
-  
-            {/* 🔄 Modal Spinner */}
-            {isAnalyzing && (
-              <div style={{
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                backgroundColor: 'rgba(0, 0, 0, 0.4)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                zIndex: 9999
-              }}>
-                <div style={{
-                  background: 'white',
-                  padding: '24px 36px',
-                  borderRadius: '12px',
-                  boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
-                  textAlign: 'center',
-                  animation: 'fadeInPopup 0.3s ease-in-out'
-                }}>
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <div className="global-spinner" />
-                    <p style={{
-                      fontSize: '1rem',
-                      color: '#2a4d8f',
-                      marginTop: '16px',
-                      fontWeight: 500
-                    }}>
-                      ⏳ {selectedLanguage === 'fr' ? "Analyse en cours..." : "Analyzing in progress..."}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
           </>
         )}
   
-        <footer
-         style={{
+        {/* Spinner */}
+        {isAnalyzing && (
+          <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.4)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 9999
+          }}>
+            <div style={{
+              background: 'white',
+              padding: '24px 36px',
+              borderRadius: '12px',
+              boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
+              textAlign: 'center',
+              animation: 'fadeInPopup 0.3s ease-in-out'
+            }}>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <div className="global-spinner" />
+                <p style={{
+                  fontSize: '1rem',
+                  color: '#2a4d8f',
+                  marginTop: '16px',
+                  fontWeight: 500
+                }}>
+                  ⏳ {selectedLanguage === 'fr' ? "Analyse en cours..." : "Analyzing in progress..."}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+  
+        {/* Tagline */}
+        <div className="tagline-wrapper">
+          <div className="tagline-track">
+            <span className="tagline-text">
+              empowering education with ai · instantly summarized · visual learning made easy · 
+            </span>
+            <span className="tagline-text">
+              empowering education with ai · instantly summarized · visual learning made easy · 
+            </span>
+          </div>
+        </div>
+  
+        {/* Footer */}
+        <footer style={{
           position: 'fixed',
           bottom: '20px',
           left: '50%',
           transform: 'translateX(-50%)',
           zIndex: 2,
-         }}
-        >
-         <img
-          src="/icons/logo.png"
-          alt="Your Brand Logo"
-          style={{
-            height: '70px',
-            opacity: 0.6,
-          }}
-         />
+        }}>
+          <img
+            src="/icons/logo.png"
+            alt="Your Brand Logo"
+            style={{
+              height: '70px',
+              opacity: 0.6,
+            }}
+          />
         </footer>
-
       </div>
     </>
   );
-}
+  
+} 
   
 function App() {
   return (

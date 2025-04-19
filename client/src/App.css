@@ -10,7 +10,7 @@ body {
   background-color: #c9d6e7;
   color: #2a4d8f;
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 300;
   cursor: pointer;
   width: 250px;
   height: 36px; /* match Generate */
@@ -32,7 +32,7 @@ body {
   background-color: white;
   color: #2a4d8f;
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 300;
   text-align: center;
   transition: border-color 0.2s ease;
 }
