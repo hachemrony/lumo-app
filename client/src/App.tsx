@@ -26,6 +26,8 @@ function HomePage() {
   const navigate = useNavigate();
   const [showUploadSuccess, setShowUploadSuccess] = useState(false);
   const [selectedLanguage] = useState('en');
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+
 
 
   React.useEffect(() => {
@@ -137,25 +139,39 @@ function HomePage() {
 
   const handleOpenSavedFile = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (!file) return;
+    if (!file) {
+      console.warn("🟡 No file selected.");
+      return;
+    }
   
     const reader = new FileReader();
+  
     reader.onload = (e) => {
       try {
         const content = JSON.parse(e.target?.result as string);
         if (content.slides && Array.isArray(content.slides)) {
           setSlides(content.slides);
-          setCurrentSlideIndex(0);
+          setCurrentSlideIndex(content.currentSlideIndex || 0);
+          setSelectedGrade(content.selectedGrade || "middle");
           alert("✅ Lesson loaded successfully!");
         } else {
-          alert("❌ Invalid file format.");
+          alert("❌ Invalid file format. Please select a valid lesson file.");
         }
       } catch (err) {
-        alert("❌ Failed to read file.");
+        console.error("❌ JSON parsing failed:", err);
+        alert("❌ Failed to read file. Make sure it’s a valid lesson file.");
       }
     };
+  
+    reader.onerror = (err) => {
+      console.error("❌ FileReader error:", err);
+      alert("❌ Error reading the file.");
+    };
+  
     reader.readAsText(file);
   };
+  
+  
   // Auto-save data to localStorage when any relevant state changes
   React.useEffect(() => {
    const draft = {
@@ -245,31 +261,8 @@ function HomePage() {
       
       <button
         style={{ display: 'block', width: '100%', padding: '10px', background: 'none', cursor: 'pointer' }}
-        onClick={async () => {
-          try {
-            const [fileHandle] = await (window as any).showOpenFilePicker({
-              types: [{
-                description: 'Lesson File',
-                accept: { 'application/json': ['.json'] },
-              }],
-              multiple: false,
-            });
-        
-            const file = await fileHandle.getFile();
-            const text = await file.text();
-            const savedData = JSON.parse(text);
-        
-            if (savedData.slides) {
-              setSlides(savedData.slides);
-              setCurrentSlideIndex(0);
-            } else {
-              alert('No slides found in the file.');
-            }
-          } catch (err) {
-            alert('❌ Failed to read file.');
-            console.error(err);
-          }
-        }}      >
+        onClick={() => fileInputRef.current?.click()}
+      >
         📂 Open Saved File
       </button>
 
@@ -277,6 +270,7 @@ function HomePage() {
         type="file"
         accept=".json"
         id="openSavedFile"
+        ref={fileInputRef}
         style={{ display: 'none' }}
         onChange={handleOpenSavedFile}
       />

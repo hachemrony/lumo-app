@@ -6,6 +6,8 @@ const fs = require("fs");
 const path = require("path");
 const pdfParse = require("pdf-parse");
 const mammoth = require("mammoth");
+require("dotenv").config();
+
 
 const app = express();
 const PORT = 5007;
@@ -215,7 +217,7 @@ const getPrompt = (text, grade, isSubject = false) => {
         },
         {
           headers: {
-            Authorization: `Bearer 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`, // Replace if you regenerate key
+            Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
             "Content-Type": "application/json",
           },
         }
@@ -346,7 +348,7 @@ app.post('/api/subject', async (req, res) => {
         },
         {
           headers: {
-            Authorization: `Bearer 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`,
+            Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
             "Content-Type": "application/json",
           },
         }
@@ -405,7 +407,7 @@ app.post('/api/subject', async (req, res) => {
         },
         {
           headers: {
-            Authorization: `Bearer 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`,
+            Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
             'Content-Type': 'application/json',
           },
         }
