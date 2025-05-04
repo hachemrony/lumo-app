@@ -379,27 +379,27 @@ export default function HomePage() {
         </div>
 
         {/* Controls */}
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginBottom: 30 }}>
-          <label className="custom-button">
-            <input type="file" accept=".pdf,.docx,.txt" onChange={handleFileUpload} style={{ display: 'none' }} />
-            {translations.uploadDocument[selectedLanguage as 'en' | 'fr']}
-          </label>
-          <input
-            type="text"
-            placeholder={translations.typeSubject[selectedLanguage as 'en' | 'fr']}
-            value={typedSubject}
-            onChange={(e) => setTypedSubject(e.target.value)}
-            className="subject-input"
-          />
-          <select
-            value={selectedGrade}
-            onChange={(e) => setSelectedGrade(e.target.value)}
-            className="custom-button"
-          >
-            <option value="elementary">{translations.elementary[selectedLanguage as 'en' | 'fr']}</option>
-            <option value="middle">{translations.middle[selectedLanguage as 'en' | 'fr']}</option>
-            <option value="high">{translations.high[selectedLanguage as 'en' | 'fr']}</option>
-          </select>
+        <div className="home-buttons-container">
+         <label className="custom-button">
+          <input type="file" accept=".pdf,.docx,.txt" onChange={handleFileUpload} style={{ display: 'none' }} />
+          {translations.uploadDocument[selectedLanguage as 'en' | 'fr']}
+         </label>
+         <input
+          type="text"
+          placeholder={translations.typeSubject[selectedLanguage as 'en' | 'fr']}
+          value={typedSubject}
+          onChange={(e) => setTypedSubject(e.target.value)}
+          className="subject-input"
+         />
+         <select
+          value={selectedGrade}
+          onChange={(e) => setSelectedGrade(e.target.value)}
+          className="custom-button"
+         >
+          <option value="elementary">{translations.elementary[selectedLanguage as 'en' | 'fr']}</option>
+          <option value="middle">{translations.middle[selectedLanguage as 'en' | 'fr']}</option>
+          <option value="high">{translations.high[selectedLanguage as 'en' | 'fr']}</option>
+         </select>
         </div>
 
         {/* Generate Button */}
