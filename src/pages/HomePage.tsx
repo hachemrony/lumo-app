@@ -448,23 +448,27 @@ export default function HomePage() {
         </div>
 
         {/* Footer Logo */}
-        <footer style={{
-          position: 'fixed',
-          bottom: 20,
-          left: '50%',
-          transform: 'translateX(-50%)',
-          zIndex: 2
-        }}>
-
-   <div style={{ textAlign: 'center', marginBottom: '10px' }}>
-     <LumoAvatar />
-     <img
+        <footer
+  style={{
+    position: 'fixed',
+    bottom: 20,
+    left: '50%',
+    transform: 'translateX(-50%)',
+    zIndex: 2,
+  }}
+>
+  <div style={{ textAlign: 'center', marginBottom: '10px' }}>
+    <div className="footer-avatar">
+      <LumoAvatar />
+    </div>
+    <img
       src={process.env.PUBLIC_URL + "/logo.png"}
       alt="Lumo Logo"
       style={{ height: '14px', opacity: 0.7, marginTop: '-10px' }}
-     />
-   </div>
-        </footer>
+    />
+  </div>
+</footer>
+
       </div>
       {isAnalyzing && (
   <div style={{

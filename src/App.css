@@ -256,3 +256,16 @@ select.custom-button {
     max-width: 260px;
   }
 }
+
+/* Push content above footer on small screens */
+@media (max-width: 768px) {
+  .App {
+    padding-bottom: 120px; /* Adjust if needed to match avatar height */
+  }
+
+  .footer-avatar {
+    width: 80px !important;
+    height: auto !important;
+  }
+}
+
