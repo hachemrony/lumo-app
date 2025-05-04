@@ -1,0 +1,234 @@
+
+body {
+  font-family: 'Poppins', sans-serif;
+}
+
+.custom-button {
+  padding: 6px 20px;
+  border: 1px solid #2a4d8f; /* outline to keep button visible */
+  border-radius: 8px;
+  background-color: transparent;
+  color: #2a4d8f;
+  font-size: 1rem;
+  font-weight: 300;
+  cursor: pointer;
+  width: 250px;
+  height: 36px;
+  transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.custom-button:hover {
+  transform: scale(1.05);
+  background-color: rgba(42, 77, 143, 0.1); /* subtle hover effect */
+}
+
+
+
+
+.subject-input {
+  width: 250px;
+  height: 36px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #2a4d8f;
+  background-color: white;
+  color: #2a4d8f;
+  font-size: 1rem;
+  font-weight: 300;
+  text-align: center;
+  transition: border-color 0.2s ease;
+}
+
+.subject-input:focus {
+  outline: none;
+  border-color: #1c3664;
+}
+
+
+
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.test-input {
+  border: 3px solid red !important;
+  padding: 12px;
+  font-size: 1rem;
+  background-color: white !important;
+  color: black;
+}
+
+
+@keyframes fadeInPopup {
+  0% { opacity: 0; transform: scale(0.9); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.global-spinner {
+  width: 26px;
+  height: 26px;
+  border: 3px solid #c6d3ea;
+  border-top: 3px solid #2a4d8f;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 10px;
+}
+
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.generating-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 16px 24px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 9999;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 240px;
+  min-width: 160px;
+  animation: fadeInPopup 0.3s ease;
+}
+
+input.custom-button {
+  background-color: white;
+}
+
+select.custom-button {
+  text-align: center;
+}
+
+/* .animated-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+  background: radial-gradient(ellipse at bottom, #d0e1f9, #f7faff);
+}
+
+.animated-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background: linear-gradient(-45deg, #e0ecff, #d0e7ff, #f0f9ff, #cde2ff);
+  background-size: 400% 400%;
+  animation: gradientMove 12s ease infinite;
+  opacity: 0.85;
+  transition: opacity 0.5s ease-in-out;
+  filter: blur(8px);
+  pointer-events: none;
+} */
+
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.svg-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1; /* Keep it behind everything */
+  overflow: hidden;
+}
+
+.svg-background svg {
+  height: 100%;
+  width: 100%;
+  display: block;
+}
+
+#tagline-text {
+  transition: opacity 0.5s ease-in-out;
+}
+
+.tagline-wrapper {
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100%;
+  margin-top: 60px;
+}
+
+.tagline-track {
+  display: inline-block;
+  animation: scroll-left 15s linear infinite;
+}
+
+.tagline-text {
+  display: inline-block;
+  font-size: 3rem;
+  font-weight: bold;
+  font-style: italic;
+  color: white;
+  padding-right: 100px;
+  letter-spacing: 1.2px;
+}
+
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+
+
