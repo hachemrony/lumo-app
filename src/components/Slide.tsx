@@ -125,10 +125,6 @@ export default function Slide({
         window.speechSynthesis.cancel();
         setIsSpeaking(false);
       };
-
-      const handleStop = () => {
-        window.speechSynthesis.cancel(); // ✅ This is now the only thing we need
-      };    
           
     const handleDownload = () => {
       const doc = new jsPDF();

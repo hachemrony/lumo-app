@@ -3,7 +3,6 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import Slide from '../components/Slide';
 import translations from '../i18n/translations';
 import Lottie from "lottie-react";
-import dotsBackground from "../lottie/dots-background.json";
 import LumoAvatar from '../components/LumoAvatar';
 import analyzingAnimation from '../lottie/analyzing.json';
 
@@ -24,7 +23,6 @@ export default function HomePage() {
     .then((data) => setDotsBackground(data));
   }, []);
   
-  const location = useLocation();
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
   

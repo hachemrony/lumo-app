@@ -109,14 +109,6 @@ const ExplorePage = () => {
     }
   };
   
-   
-
-  const handleDeleteLesson = (indexToDelete: number) => {
-    const updatedLessons = lessons.filter((_, i) => i !== indexToDelete);
-    setLessons(updatedLessons);
-    localStorage.setItem('curriculumUploads', JSON.stringify(updatedLessons));
-  };
-  
   return (
     <>
       {dotsBackground && (
