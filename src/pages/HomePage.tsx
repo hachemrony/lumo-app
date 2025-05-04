@@ -312,7 +312,7 @@ export default function HomePage() {
             localStorage.removeItem('userName');
             localStorage.removeItem('userPassword');
             localStorage.removeItem('userEmail');
-            localStorage.removeItem('userRole'); {/* 🛡️ Fix: clear role */}
+            localStorage.removeItem('userRole'); // 🛡️ Fix: clear role
             window.location.reload();
            }}>Sign Out</button>
            <button style={menuButtonStyle} onClick={() => fileInputRef.current?.click()}>Open Saved File</button>
