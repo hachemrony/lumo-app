@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Slide from '../components/Slide';
 import translations from '../i18n/translations';
 import Lottie from "lottie-react";
