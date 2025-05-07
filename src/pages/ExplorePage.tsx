@@ -198,7 +198,7 @@ const ExplorePage = () => {
             setSelectedUnit('');
             setSelectedLesson('');
           }} style={selectStyle}>
-            <option value="">🎓 Select Grade</option>
+            <option value="">{translations.selectGrade[selectedLanguage as 'en' | 'fr']}</option>
             {uniqueGrades.map((grade) => (
               <option key={grade} value={grade}>{grade}</option>
             ))}
@@ -210,7 +210,7 @@ const ExplorePage = () => {
               setSelectedUnit('');
               setSelectedLesson('');
             }} style={selectStyle}>
-              <option value="">📚 Select Subject</option>
+              <option value="">{translations.selectSubject[selectedLanguage as 'en' | 'fr']}</option>
               {uniqueSubjects.map((subject) => (
                 <option key={subject} value={subject}>{subject}</option>
               ))}
@@ -222,7 +222,7 @@ const ExplorePage = () => {
               setSelectedUnit(e.target.value);
               setSelectedLesson('');
             }} style={selectStyle}>
-              <option value="">📖 Select Unit</option>
+              <option value="">{translations.selectUnit[selectedLanguage as 'en' | 'fr']}</option>
               {uniqueUnits.map((unit) => (
                 <option key={unit} value={unit}>{unit}</option>
               ))}
@@ -231,7 +231,7 @@ const ExplorePage = () => {
   
           {selectedUnit && (
             <select value={selectedLesson} onChange={(e) => setSelectedLesson(e.target.value)} style={selectStyle}>
-              <option value="">📝 Select Lesson</option>
+              <option value="">{translations.selectLesson[selectedLanguage as 'en' | 'fr']}</option>
               {uniqueLessonTitles.map((lessonTitle) => (
                 <option key={lessonTitle} value={lessonTitle}>{lessonTitle}</option>
               ))}

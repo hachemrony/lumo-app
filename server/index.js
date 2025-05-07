@@ -1,13 +1,17 @@
 const express = require("express");
 const cors = require("cors");
 const multer = require("multer");
-const axios = require("axios");
 const fs = require("fs");
 const path = require("path");
 const pdfParse = require("pdf-parse");
 const mammoth = require("mammoth");
 require("dotenv").config();
+const axios = require("axios");
 
+const { OpenAI } = require("openai");
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 
 const app = express();
 const PORT = 5007;
@@ -24,6 +28,11 @@ if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
 app.get("/", (req, res) => {
   res.send("✅ Simple server is working!");
 });
+
+app.get('/ping-test', (req, res) => {
+  res.send('pong');
+});
+
 
 // ElevenLabs narration
 app.post("/api/narrate", async (req, res) => {
@@ -57,6 +66,7 @@ app.post("/api/narrate", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch audio" });
   }
 });
+
 
 // Upload + extract content
 app.post("/api/upload", upload.single("file"), async (req, res) => {
@@ -383,19 +393,25 @@ app.post('/api/subject', async (req, res) => {
     const { question, context } = req.body;
   
     const prompt = `
-  You are an educational assistant helping a student with a slide-based lesson.
-  
-  📘 Slide Content:
-  ---
-  ${context}
-  ---
-  
-  ✍️ The student has a question:
-  "${question}"
-  
-  🎯 Please provide a clear, relevant answer based on the slide or logical background knowledge.
-  Avoid saying "this is not in the slide" — answer like a kind teacher in class.
-  `;
+You are a teacher who always uses diagrams when asked.
+
+The student asked: "${question}"
+
+✅ If the question contains words like "flowchart", "diagram", "cycle", or "logic", DO NOT explain it in words alone. YOU MUST provide a Mermaid.js diagram wrapped in triple backticks, like this:
+
+\`\`\`mermaid
+graph TD
+Start --> Step1 --> Step2 --> End
+\`\`\`
+
+❌ Do NOT say "I can describe it in words" — the student asked for a diagram, not just an explanation.
+
+💡 You can also write a short explanation **after** the diagram.
+
+BEGIN NOW:
+`;
+
+
   
     try {
       const response = await axios.post(
@@ -419,10 +435,11 @@ app.post('/api/subject', async (req, res) => {
       console.error('❌ Q&A API failed:', err.response?.data || err.message);
       res.status(500).json({ error: 'Failed to answer question' });
     }
-  });
+  });  
   
   
 // Launch server
 app.listen(PORT, () => {
   console.log(`🚀 Server running at http://127.0.0.1:${PORT}`);
 });
+

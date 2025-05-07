@@ -5,6 +5,8 @@ import translations from '../i18n/translations';
 import Lottie from "lottie-react";
 import LumoAvatar from '../components/LumoAvatar';
 import analyzingAnimation from '../lottie/analyzing.json';
+import MermaidRenderer from '../components/MermaidRenderer';
+
 
 export default function HomePage() {
   const [lumoCharacter, setLumoCharacter] = useState<any>(null); // ✅ INSIDE here
@@ -42,7 +44,6 @@ export default function HomePage() {
   const [quickHelpQuestion, setQuickHelpQuestion] = useState('');
   const [quickHelpAnswer, setQuickHelpAnswer] = useState('');
   const [isQuickHelpLoading, setIsQuickHelpLoading] = useState(false);
-
 
   const storedName = localStorage.getItem('userName');
   const welcomeText = storedName
@@ -155,19 +156,55 @@ export default function HomePage() {
   
     setIsQuickHelpLoading(true);
     setQuickHelpAnswer('');
-    
+  
     try {
-      const res = await fetch('http://localhost:5007/api/quick-help', {
+      // STEP 1: Ask GPT-4 if the question requires a diagram
+      const diagnosisRes = await fetch('http://localhost:5007/api/ask', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question: quickHelpQuestion }),
+        body: JSON.stringify({
+          question: `Does this question require a diagram or flowchart? Just reply YES or NO:\n\n"${quickHelpQuestion}"`,
+          context: '',
+        }),
       });
   
-      const data = await res.json();
-      setQuickHelpAnswer(data.answer);
+      const diagnosisData = await diagnosisRes.json();
+      const decision = diagnosisData.answer.trim().toLowerCase();
+  
+      // STEP 2: If YES, prompt for Mermaid
+      const finalPrompt = decision.includes('yes')
+  ? `
+You must return ONLY a Mermaid.js diagram in this exact format:
+
+\`\`\`mermaid
+graph TD
+A[Start] --> B[Step 1]
+B --> C[Step 2]
+\`\`\`
+
+Now draw a diagram for: "${quickHelpQuestion}"
+
+❌ Do not explain. ❌ Do not introduce it. ❌ Do not describe it. Just return the code block.
+`
+  : quickHelpQuestion;
+
+  
+      const finalRes = await fetch('http://localhost:5007/api/ask', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          question: finalPrompt,
+          context: '',
+        }),
+      });
+  
+      const finalData = await finalRes.json();
+      console.log("🤖 Final Answer:", finalData.answer);
+      setQuickHelpAnswer(finalData.answer);
+  
     } catch (err) {
+      console.error('❌ Quick Help Error:', err);
       setQuickHelpAnswer('❌ Failed to get an answer. Try again later.');
-      console.error(err);
     } finally {
       setIsQuickHelpLoading(false);
     }
@@ -213,7 +250,32 @@ export default function HomePage() {
       />
     );
   }
-
+  function renderAnswer(answer: string) {
+    const mermaidMatch = answer.match(/```mermaid\s*([\s\S]*?)```/);
+  
+    if (mermaidMatch) {
+      const diagram = mermaidMatch[1].replace(/^\s*mermaid/, '').trim();
+      const plainText = answer.replace(mermaidMatch[0], '').trim();
+  
+      return (
+        <div>
+          {plainText && (
+            <div style={{ marginBottom: '10px', fontWeight: '500' }}>
+              {plainText}
+            </div>
+          )}
+          {!plainText && (
+            <div style={{ marginBottom: '10px' }}>📊 Here's your diagram:</div>
+          )}
+          <MermaidRenderer chart={diagram} />
+        </div>
+      );
+    }
+  
+    return <div>{answer}</div>;
+  }
+  
+  
   return (
    
     <>
@@ -348,7 +410,7 @@ export default function HomePage() {
 
       {/* Main Content */}
       <div className="animated-bg"></div>
-      <div className="App" style={{ padding: 20, position: 'relative', zIndex: 1 }}>
+      <div className="App" style={{ padding: 60, position: 'relative', zIndex: 1 }}>
         {/* Welcome Title */}
         <div style={{ textAlign: 'center', marginBottom: 40 }}>
           <h1 style={{
@@ -429,14 +491,31 @@ export default function HomePage() {
           <hr style={{ margin: '35px auto 35px auto', width: '100%', maxWidth: '820px', borderTop: '1px solid #bbb' }} />
 
           {/* Quick Help Button */}
-          <div style={{ textAlign: 'center', marginTop: '40px' }}>
-           <button
-            onClick={() => setIsQuickHelpOpen(true)}
-            className="custom-button"
-           >
-            {translations.quickHelp[selectedLanguage as 'en' | 'fr']}
-           </button>
-          </div>
+          <div style={{ position: 'absolute', top: 20, left: '50%', transform: 'translateX(-50%)', zIndex: 20 }}>
+  <button
+    onClick={() => setIsQuickHelpOpen(true)}
+    style={{
+      background: 'transparent',
+      border: '1px solid #ccc',
+      borderRadius: '6px',
+      padding: '5px 10px',
+      cursor: 'pointer',
+      fontWeight: 400,
+      fontSize: '0.9rem',
+      transition: 'all 0.2s ease',
+    }}
+    onMouseEnter={(e) => {
+      e.currentTarget.style.background = '#e6f0ff';
+      e.currentTarget.style.transform = 'scale(1.05)';
+    }}
+    onMouseLeave={(e) => {
+      e.currentTarget.style.background = 'white';
+      e.currentTarget.style.transform = 'scale(1)';
+    }}
+  >
+    {translations.quickHelpButton[selectedLanguage as 'en' | 'fr']}
+  </button>
+</div>
 
 
         {/* Tagline Animation */}
@@ -537,13 +616,16 @@ export default function HomePage() {
         boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
       }}
     >
-      <h2 style={{ marginBottom: '12px', textAlign: 'center' }}>🧠 Ask Anything</h2>
+      <h2 style={{ marginBottom: '12px', textAlign: 'center' }}>
+         {translations.quickHelpTitle[selectedLanguage as 'en' | 'fr']}
+      </h2>
+
 
       <textarea
         rows={4}
         value={quickHelpQuestion}
         onChange={(e) => setQuickHelpQuestion(e.target.value)}
-        placeholder="Paste your quiz question or anything..."
+        placeholder={translations.quickHelpPlaceholder[selectedLanguage as 'en' | 'fr']}
         style={{
           width: '100%',
           padding: '12px',
@@ -553,35 +635,62 @@ export default function HomePage() {
         }}
       />
 
-      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginBottom: '12px' }}>
-        <button
-          onClick={() => {
-            setIsQuickHelpOpen(false);
-            setQuickHelpQuestion('');
-            setQuickHelpAnswer('');
-          }}
-          style={{
-            padding: '6px 12px',
-            background: '#ddd',
-            border: 'none',
-            borderRadius: '6px',
-          }}
-        >
-          Close
-        </button>
-        <button
-          onClick={handleQuickHelpSubmit}
-          style={{
-            padding: '6px 12px',
-            background: '#2a4d8f',
-            color: 'white',
-            border: 'none',
-            borderRadius: '6px',
-          }}
-        >
-          Ask
-        </button>
-      </div>
+<div style={{ 
+  display: 'flex', 
+  justifyContent: 'space-between', 
+  gap: '12px', 
+  marginBottom: '12px' 
+}}>
+  <button
+    onClick={() => {
+      setIsQuickHelpOpen(false);
+      setQuickHelpQuestion('');
+      setQuickHelpAnswer('');
+    }}
+    style={{
+      flex: 1,
+      padding: '10px',
+      background: 'transparent',
+      border: '1px solid #2a4d8f',
+      borderRadius: '6px',
+      cursor: 'pointer',
+      fontWeight: 500,
+      transition: 'all 0.2s ease',
+    }}
+    onMouseEnter={(e) => {
+      e.currentTarget.style.background = '#f0f0f0';
+    }}
+    onMouseLeave={(e) => {
+      e.currentTarget.style.background = 'transparent';
+    }}
+  >
+    {translations.quickHelpClose[selectedLanguage as 'en' | 'fr']}
+  </button>
+
+  <button
+    onClick={handleQuickHelpSubmit}
+    style={{
+      flex: 1,
+      padding: '10px',
+      background: 'transparent',
+      border: '1px solid #2a4d8f',
+      color: '#2a4d8f',
+      borderRadius: '6px',
+      cursor: 'pointer',
+      fontWeight: 500,
+      transition: 'all 0.2s ease',
+    }}
+    onMouseEnter={(e) => {
+      e.currentTarget.style.background = '#e6f0ff';
+    }}
+    onMouseLeave={(e) => {
+      e.currentTarget.style.background = 'transparent';
+    }}
+  >
+    {translations.quickHelpAsk[selectedLanguage as 'en' | 'fr']}
+  </button>
+</div>
+
 
       <div
         style={{
@@ -603,15 +712,14 @@ export default function HomePage() {
               borderRadius: '6px',
             }}
           >
-            {quickHelpAnswer}
+            {renderAnswer(quickHelpAnswer)}
           </p>
         )}
+        
       </div>
     </div>
   </div>
 )}
-
-
 
     </>
   );

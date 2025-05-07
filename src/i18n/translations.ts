@@ -2,7 +2,6 @@ const translations = {
     uploadDocument: { en: 'Upload Document', fr: 'Télécharger (document)' },
     typeSubject: { en: 'Type a Subject', fr: 'Tapez un sujet' },
     clearDraft: { en: '🗑️ Clear Draft', fr: '🗑️ Effacer le brouillon' },
-    selectGrade: { en: '🎓 Select Grade', fr: '🎓 Sélectionnez un niveau' },
     analyzing: { en: 'Analyzing in progress...', fr: 'Analyse en cours...' },
     uploadSuccess: { en: '✅ Document uploaded successfully!', fr: '✅ Document téléchargé avec succès!' },
     generate: { en: 'Generate', fr: 'Générer' },
@@ -73,7 +72,35 @@ const translations = {
       quickHelp: {
         en: "Quick Help",
         fr: "Aide Rapide"
-      }
+      },
+      quickHelpButton: {
+        en: 'Quick Help',
+        fr: 'Aide Rapide',
+      },
+      quickHelpTitle: {
+        en: "Ask Anything",
+        fr: "Posez une Question",
+      },
+      quickHelpPlaceholder: {
+        en: "Paste your quiz question or anything...",
+        fr: "Collez votre question ou demande ici...",
+      },
+      quickHelpAsk: {
+        en: "Ask",
+        fr: "Demander",
+      },
+      quickHelpClose: {
+        en: "Close",
+        fr: "Fermer",
+      },
+      selectGrade: {
+        en: "Select Grade",
+        fr: "Choisir un niveau",
+      },
+    
+      
+      
+      
       
       
       

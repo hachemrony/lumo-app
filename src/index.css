@@ -63,4 +63,10 @@ code {
   filter: brightness(0.95);
 }
 
+svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
 
