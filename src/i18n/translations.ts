@@ -12,9 +12,9 @@ const translations = {
       en: 'Please upload a document or type a subject before clicking Generate.',
       fr: 'Veuillez télécharger un document ou taper un sujet avant de cliquer sur Générer.',
     },
-    elementary: { en: '🎓 Elementary', fr: '🎓 Primaire' },
-    middle: { en: '🎓 Middle', fr: '🎓 Collège' },
-    high: { en: '🎓 High', fr: '🎓 Lycée' },
+    elementary: { en: 'Elementary', fr: 'Primaire' },
+    middle: { en: 'Middle', fr: 'Collège' },
+    high: { en: 'High', fr: 'Lycée' },
   
     // 🆕 Add these missing for ExplorePage
     exploreTitle: { en: 'Explore Curriculum', fr: 'Explorer le programme' },

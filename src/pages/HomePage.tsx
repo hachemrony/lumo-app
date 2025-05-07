@@ -414,7 +414,7 @@ Now draw a diagram for: "${quickHelpQuestion}"
         {/* Welcome Title */}
         <div style={{ textAlign: 'center', marginBottom: 40 }}>
           <h1 style={{
-            fontSize: '3.5rem',
+            fontSize: '2.5rem',
             fontWeight: 'bold',
             fontStyle: 'italic',
             color: '#2a4d8f',

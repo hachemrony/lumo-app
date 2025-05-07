@@ -212,7 +212,7 @@ const getPrompt = (text, grade, isSubject = false) => {
   app.post("/api/summarize", async (req, res) => {
     const { text, grade } = req.body;
     console.log("🟡 Incoming text:", text?.slice(0, 100));
-    console.log("🎓 Grade:", grade);
+    console.log("Grade:", grade);
   
     const prompt = getPrompt(text, grade);
     console.log("📝 Prompt built:", prompt?.slice(0, 300));
