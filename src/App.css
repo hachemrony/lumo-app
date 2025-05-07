@@ -267,5 +267,9 @@ select.custom-button {
     width: 80px !important;
     height: auto !important;
   }
+  .custom-button option {
+    text-align: center;
+  }
+  
 }
 
