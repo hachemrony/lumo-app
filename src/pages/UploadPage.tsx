@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LumoAvatar from '../components/LumoAvatar';
+import translations from '../i18n/translations';
+
 
 export default function UploadPage() {
   const navigate = useNavigate();
+  const [selectedLanguage] = useState<'en' | 'fr'>(
+    (localStorage.getItem('selectedLanguage') as 'en' | 'fr') || 'en'
+  );
+  
   const [grade, setGrade] = useState('Grade 6');
   const [subject, setSubject] = useState('Artificial Intelligence');
   const [unit, setUnit] = useState('Unit 1: Basics');
@@ -76,44 +82,63 @@ export default function UploadPage() {
   return (
     <>
       <div style={{
-        maxWidth: '600px',
-        margin: '10px auto 0',
-        padding: '5px 5px',
-        border: '1px solid #ccc',
-        borderRadius: '12px',
-        position: 'relative'
+       position: 'absolute',
+       top: '20px',
+       left: '20px',
+       display: 'flex',
+       gap: '12px',
+       zIndex: 10
       }}>
-        {/* Home Button */}
-        <button
-          onClick={() => navigate('/')}
-          style={{
-            position: 'absolute',
-            top: '10px',
-            left: '10px',
-            backgroundColor: 'white',
-            border: '1px solid #ccc',
-            borderRadius: '6px',
-            padding: '5px 10px',
-            cursor: 'pointer',
-            fontSize: '0.8rem',
-          }}
-        >
-          Home
-        </button>
+       <button
+        onClick={() => navigate('/')}
+        style={{
+         background: 'white',
+         border: '1px solid #ccc',
+         borderRadius: '6px',
+         padding: '6px 12px',
+         fontSize: '0.9rem',
+         cursor: 'pointer'
+        }}
+       >
+        Home
+       </button>
+
+       <button
+        onClick={() => navigate('/admin-hub')}
+        style={{
+         background: 'white',
+         border: '1px solid #ccc',
+         borderRadius: '6px',
+         padding: '6px 12px',
+         fontSize: '0.9rem',
+         cursor: 'pointer'
+        }}
+       >
+        Dashboard
+       </button>
+      </div>
+      <div style={{
+       maxWidth: '600px',
+       margin: '10px auto 0',
+       padding: '5px 5px',
+       border: '1px solid #ccc',
+       borderRadius: '12px',
+       position: 'relative',
+      }}>
   
         <h1 style={{ textAlign: 'center', marginBottom: '16px', fontSize: '1.4rem', color: '#2a4d8f' }}>
-          Upload New Lesson
+          {translations.uploadNewLesson[selectedLanguage]}
         </h1>
   
         {/* Inputs */}
-        <label>Grade:</label>
+        <label>{translations.gradeLabel[selectedLanguage]}</label>
         <select value={grade} onChange={(e) => setGrade(e.target.value)} style={inputStyle}>
           {['Grade 6', 'Grade 7', 'Grade 8', 'Grade 9', 'Grade 10', 'Grade 11', 'Grade 12'].map((g) => (
             <option key={g} value={g}>{g}</option>
           ))}
         </select>
   
-        <label>Subject:</label>
+        <label>{translations.subjectLabel[selectedLanguage]}</label>
         <input
           type="text"
           value={subject}
@@ -122,7 +147,7 @@ export default function UploadPage() {
           style={inputStyle}
         />
   
-        <label>Unit:</label>
+        <label>{translations.unitLabel[selectedLanguage]}</label>
         <input
           type="text"
           value={unit}
@@ -131,7 +156,7 @@ export default function UploadPage() {
           style={inputStyle}
         />
   
-        <label>Lesson Title:</label>
+        <label>{translations.lessonTitleLabel[selectedLanguage]}</label>
         <input
           type="text"
           value={lessonTitle}
@@ -140,7 +165,7 @@ export default function UploadPage() {
           style={inputStyle}
         />
   
-        <label>Upload File (PDF, DOCX, TXT):</label>
+        <label>{translations.uploadFileLabel[selectedLanguage]}</label>
         <input
           type="file"
           accept=".pdf,.docx,.txt"
@@ -165,7 +190,7 @@ export default function UploadPage() {
             marginTop: '10px'
           }}
         >
-          Upload Lesson
+          {translations.uploadLessonButton[selectedLanguage]}
         </button>
   
         {uploadStatus && (

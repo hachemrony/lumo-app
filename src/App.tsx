@@ -12,6 +12,9 @@ import './App.css';
 import UploadPage from './pages/UploadPage';
 import AdminSignupPage from './pages/AdminSignupPage';
 import ManageLessonsPage from './pages/ManageLessonsPage';
+import AdminHubPage from './pages/AdminHubPage';
+import AdminDashboardPage from './pages/AdminDashboardPage';
+
 
 
 
@@ -35,6 +38,9 @@ function App() {
         <Route path="/upload" element={<UploadPage />} />
         <Route path="/adminsignup" element={<AdminSignupPage />} />
         <Route path="/manage" element={<ManageLessonsPage />} />
+        <Route path="/admin-hub" element={<AdminHubPage />} />
+        <Route path="/admin-dashboard" element={<AdminDashboardPage />} />
+
 
 
       </Routes>

@@ -2,6 +2,8 @@ import React, { useRef, useState } from 'react';
 import { useEffect } from 'react';
 import jsPDF from 'jspdf';
 import translations from '../i18n/translations';
+import { trackUsage } from '../utils/trackUsage';
+
 
 
 type SlideProps = {
@@ -39,6 +41,8 @@ export default function Slide({
     const [visualImage, setVisualImage] = useState<string | null>(null);
     const [isGenerating, setIsGenerating] = useState(false);
     const [isExitModalOpen, setIsExitModalOpen] = useState(false);
+    const [showPractice, setShowPractice] = useState(true);
+
 
 
 
@@ -190,6 +194,10 @@ export default function Slide({
     
         setPracticeQuestion(parsed);
         setSelectedAnswer(null); // reset selection each time
+
+        const username = localStorage.getItem('userName');
+        trackUsage('practice', username || 'unknown');
+
       } catch (err) {
         console.error('❌ Could not load practice question:', err);
         alert('❌ Practice unavailable right now.');
@@ -220,6 +228,7 @@ export default function Slide({
       
         setIsLoading(true);
         setAnswer('');
+
       
         try {
           const response = await fetch('http://localhost:5007/api/ask', {
@@ -229,6 +238,10 @@ export default function Slide({
           });
           const data = await response.json();
           setAnswer(data.answer);
+
+          const username = localStorage.getItem('userName');
+          trackUsage('ask', username || 'unknown');
+
       
           // 🗣️ Narrate ONLY the AI's answer
           const utter = new SpeechSynthesisUtterance(data.answer);
@@ -353,8 +366,16 @@ export default function Slide({
     placeholder={translations.typeNotesPlaceholder[selectedLanguage as 'en' | 'fr']}
   />
 </div>
-{practiceQuestion && (
-  <div className="mt-6 p-4 border rounded-md bg-gray-50 shadow">
+{practiceQuestion && showPractice && (
+  <div className="relative mt-6 p-4 border rounded-md bg-gray-50 shadow">
+    {/* Close (×) button */}
+    <button
+      onClick={() => setShowPractice(false)}
+      className="absolute top-2 right-2 text-gray-500 hover:text-red-600 text-xl font-bold"
+      aria-label="Close practice section"
+    >
+      ×
+    </button>
     <h3 className="text-lg font-semibold mb-2 text-blue-900">🧠 Practice Question</h3>
     <p className="mb-4 text-gray-800">{practiceQuestion.question}</p>
 
@@ -626,6 +647,10 @@ export default function Slide({
                 const data = await res.json();
                 if (data.imageUrl) {
                   setVisualImage(data.imageUrl);
+
+                  const username = localStorage.getItem('userName');
+                  trackUsage('image', username || 'unknown');
+                  
                 } else {
                   alert("❌ No image returned. Try a different description.");
                 }

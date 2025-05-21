@@ -1,12 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import translations from '../i18n/translations';
+
 
 const ManageLessonsPage = () => {
     const handleEditClick = (lesson: { lessonTitle: string; grade: string; subject: string; unit: string; uploadedAt: string }) => {
-        const newLessonTitle = prompt('Edit Lesson Title:', lesson.lessonTitle);
-        const newGrade = prompt('Edit Grade:', lesson.grade);
-        const newSubject = prompt('Edit Subject:', lesson.subject);
-        const newUnit = prompt('Edit Unit:', lesson.unit);
+      const newLessonTitle = prompt(
+        selectedLanguage === 'fr' ? 'Modifier le titre de la leçon :' : 'Edit Lesson Title:',
+        lesson.lessonTitle
+      );
+      const newGrade = prompt(
+        selectedLanguage === 'fr' ? 'Modifier le niveau :' : 'Edit Grade:',
+        lesson.grade
+      );
+      const newSubject = prompt(
+        selectedLanguage === 'fr' ? 'Modifier le sujet :' : 'Edit Subject:',
+        lesson.subject
+      );
+      const newUnit = prompt(
+        selectedLanguage === 'fr' ? 'Modifier l’unité :' : 'Edit Unit:',
+        lesson.unit
+      );
+      
       
         if (newLessonTitle && newGrade && newSubject && newUnit) {
           const updatedLessons = lessons.map((l) =>
@@ -24,6 +39,10 @@ const ManageLessonsPage = () => {
   const navigate = useNavigate();
   const [lessons, setLessons] = useState<{ grade: string; subject: string; unit: string; lessonTitle: string; uploadedAt: string }[]>([]);
   const [search, setSearch] = useState('');
+  const [selectedLanguage] = useState<'en' | 'fr'>(
+    (localStorage.getItem('selectedLanguage') as 'en' | 'fr') || 'en'
+  );
+  
 
   useEffect(() => {
     const role = localStorage.getItem('userRole');
@@ -52,7 +71,7 @@ const ManageLessonsPage = () => {
     
     <div style={{ padding: '40px' }}>
         {/* Home Button */}
-        <div style={{ position: 'absolute', top: '20px', left: '20px', zIndex: 10 }}>
+        <div style={{ position: 'absolute', top: '20px', left: '20px', zIndex: 10, display: 'flex', gap: '12px' }}>
          <button
           onClick={() => navigate('/')}
           style={{
@@ -67,16 +86,30 @@ const ManageLessonsPage = () => {
          >
            Home
          </button>
+         <button
+           onClick={() => navigate('/admin-hub')}
+           style={{
+            background: 'white',
+            border: '1px solid #ccc',
+            borderRadius: '6px',
+            padding: '5px 12px',
+            fontSize: '0.9rem',
+            cursor: 'pointer',
+            fontWeight: 400
+           }}
+         >
+          Dashboard
+         </button>
         </div>
 
-      <h1 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '20px', marginTop: '60px'}}>
-        Manage Lessons
+      <h1 style={{ fontSize: '2rem', fontWeight: 'normal', marginBottom: '20px', marginTop: '60px'}}>
+        {translations.manageLessons[selectedLanguage]}
       </h1>
 
       {/* 🔍 Search Field */}
       <input
         type="text"
-        placeholder="Search lessons..."
+        placeholder={selectedLanguage === 'fr' ? 'Rechercher des leçons...' : 'Search lessons...'}
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         style={{
@@ -92,7 +125,8 @@ const ManageLessonsPage = () => {
 
       {/* 📋 Lessons List */}
       {filteredLessons.length === 0 ? (
-        <p>No matching lessons found.</p>
+        <p>{selectedLanguage === 'fr' ? 'Aucune leçon correspondante trouvée.' : 'No matching lessons found.'}</p>
+
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {filteredLessons.map((lesson, index) => (
@@ -104,7 +138,12 @@ const ManageLessonsPage = () => {
               <p><strong>Uploaded:</strong> {new Date(lesson.uploadedAt).toLocaleDateString()}</p>
               <button
                 onClick={() => {
-                    const confirmDelete = window.confirm('❗ Are you sure you want to delete this lesson?');
+                  const confirmDelete = window.confirm(
+                    selectedLanguage === 'fr'
+                      ? '❗ Êtes-vous sûr de vouloir supprimer cette leçon ?'
+                      : '❗ Are you sure you want to delete this lesson?'
+                  );
+                  
                     if (confirmDelete) {
                       handleDelete(lesson.lessonTitle);
                     }

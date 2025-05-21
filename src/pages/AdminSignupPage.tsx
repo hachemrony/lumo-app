@@ -41,7 +41,7 @@ export default function AdminSignupPage() {
     localStorage.setItem('userName', name);
     localStorage.setItem('userRole', 'admin');
     alert('✅ Admin account created successfully!');
-    navigate('/upload');
+    navigate('/admin-hub');
   };
 
   return (

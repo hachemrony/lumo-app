@@ -6,6 +6,8 @@ import Lottie from "lottie-react";
 import LumoAvatar from '../components/LumoAvatar';
 import analyzingAnimation from '../lottie/analyzing.json';
 import MermaidRenderer from '../components/MermaidRenderer';
+import { trackUsage } from '../utils/trackUsage';
+
 
 
 export default function HomePage() {
@@ -89,7 +91,10 @@ export default function HomePage() {
       const data = await res.json();
       setSlides(data.slides || []);
       setCurrentSlideIndex(0);
-  
+
+      const username = localStorage.getItem('userName');
+      trackUsage('summarize', username || 'unknown');
+
       // ✅ This is the missing part
       navigate('/lesson', {
         state: { slides: data.slides || [] },
@@ -380,30 +385,21 @@ Now draw a diagram for: "${quickHelpQuestion}"
            <button style={menuButtonStyle} onClick={() => fileInputRef.current?.click()}>Open Saved File</button>
            <input type="file" accept=".json" ref={fileInputRef} style={{ display: 'none' }} onChange={handleOpenSavedFile} />
 
-           {/* 🛡️ Upload Curriculum: visible for ALL (but check on click) */}
+           {/* ✅ New Admin Dashboard Button */}
            <button
             style={menuButtonStyle}
             onClick={() => {
              const role = localStorage.getItem('userRole');
              if (role === 'admin') {
-              navigate('/upload');
+              navigate('/admin-hub');
              } else {
-              navigate('/adminsignup');
+              navigate('/adminsignup'); // or use /signup if that’s your admin page
              }
             }}
            >
-            Upload Curriculum
+             Admin Dashboard
            </button>
 
-           {/* 🛡️ Manage Lessons: ONLY show if Admin */}
-           {localStorage.getItem('userRole') === 'admin' && (
-            <button
-             style={menuButtonStyle}
-             onClick={() => navigate('/manage')}
-            >
-             Manage Lessons
-            </button>
-           )}
          </div>
         )}
       </div>

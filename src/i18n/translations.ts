@@ -97,6 +97,63 @@ const translations = {
         en: "Select Grade",
         fr: "Choisir un niveau",
       },
+      adminHubTitle: {
+        en: "Admin Control Panel",
+        fr: "Panneau de Contrôle Admin",
+      },
+      uploadLessons: {
+        en: "Upload Lessons",
+        fr: "Téléverser des Leçons",
+      },
+      manageLessons: {
+        en: "Manage Lessons",
+        fr: "Gérer les Leçons",
+      },
+      trackUsage: {
+        en: "Track Usage",
+        fr: "Suivi d'Utilisation",
+      },
+      dashboard: {
+        en: "Dashboard",
+        fr: "Tableau de Bord",
+      },
+      uploadNewLesson: {
+        en: "Upload New Lesson",
+        fr: "Téléverser une Nouvelle Leçon",
+      },
+      gradeLabel: {
+        en: "Grade",
+        fr: "Niveau",
+      },
+      subjectLabel: {
+        en: "Subject",
+        fr: "Sujet",
+      },
+      unitLabel: {
+        en: "Unit",
+        fr: "Unité",
+      },
+      lessonTitleLabel: {
+        en: "Lesson Title",
+        fr: "Titre de la Leçon",
+      },
+      uploadFileLabel: {
+        en: "Upload File (PDF, DOCX, TXT)",
+        fr: "Téléverser un Fichier (PDF, DOCX, TXT)",
+      },
+      uploadLessonButton: {
+        en: "Upload Lesson",
+        fr: "Téléverser la Leçon",
+      },
+      apiUsageTrackerTitle: {
+        en: "API Usage & Cost Tracker",
+        fr: "Suivi d’Utilisation de l’API et des Coûts",
+      },
+      estimatedCost: {
+        en: "Estimated Monthly Cost",
+        fr: "Coût Mensuel Estimé",
+      }
+    
     
       
       
